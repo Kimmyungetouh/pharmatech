@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=pharmatech
+POSTGRES_USER=APDxPdberZjQKgWweZDNSwAUxtuvmgoa
+POSTGRES_PASSWORD=sFRNTwaXMCJ82MwCYvBp1iJnkNkm9Lo7pzKw0lmjgnwzGmMUa9MtmnZvVgD6VcHe

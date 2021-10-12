@@ -1,0 +1,251 @@
+{% load static i18n %}<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>{% block title %}pharmatech{% endblock title %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gestion de stock à la pharmacie">
+    <meta name="author" content="Kimmy">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <![endif]-->
+
+    <link rel="icon" href="{% static 'images/favicons/favicon.ico' %}">
+
+    {% block css %}
+    <!-- Latest compiled and minified Bootstrap CSS -->
+{#    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">#}
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <!-- Your stuff: Third-party CSS libraries go here -->
+      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+      <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}">
+      <link rel="stylesheet" href="{% static 'fa/css/solid.min.css' %}">
+      <link rel="stylesheet" href="{% static 'fa/css/fontawesome.min.css' %}">
+      <link rel=  "stylesheet" href="{% static 'fa/css/reglar.min.css' %}">
+    <!-- This file stores project-specific CSS -->
+    <link href="{% static 'css/project.css' %}" rel="stylesheet">
+    {% endblock %}
+  {% block dataTableCss %}
+{#     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">#}
+     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+     <link rel="stylesheet" href="{% static 'plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+     <link rel="stylesheet" href="{% static 'plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+     <link rel="stylesheet" href="{% static 'plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
+     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css">
+  {% endblock %}
+    <!-- Le javascript
+    ================================================== -->
+    {# Placed at the top of the document so pages load faster with defer #}
+    {% block javascript %}
+      <!-- Bootstrap JS and its dependencies-->
+     {% comment %} <script defer src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script defer src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+      <script defer src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+{% endcomment %}
+       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+      <!-- Your stuff: Third-party javascript libraries go here -->
+
+      <script src="{% static "plugins/jquery/jquery.min.js" %}"></script>
+      <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+      <!-- place project specific Javascript in this file -->
+      <script defer src="{% static 'js/project.js' %}"></script>
+    {% endblock javascript %}
+
+  </head>
+
+  <body>
+    {% if not view.is_popup %}
+      <div class="mb-1">
+
+      <nav class="navbar navbar-expand-md navbar-dark bg-success ">
+        <span class="mx-4 img-circle img-thumbnail"><img src="{% static 'images/logo/pharma.png' %}" alt="" width="60" height="50"></span>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'home' %}">Pharmatech</a>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(actuel)</span></a>
+            </li>
+           {% comment %} <li class="nav-item">
+              <a class="nav-link" href="{% url 'about' %}">About</a>
+            </li>
+            {% if request.user.is_authenticated %}
+              <li class="nav-item">
+                {# URL provided by django-allauth/account/urls.py #}
+                <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% translate "My Profile" %}</a>
+              </li>
+              <li class="nav-item">
+                {# URL provided by django-allauth/account/urls.py #}
+                <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                {# URL provided by django-allauth/account/urls.py #}
+                <a id="sign-up-link" class="nav-link" href="{% url 'account_signup' %}">{% translate "Sign Up" %}</a>
+              </li>
+              <li class="nav-item">
+                {# URL provided by django-allauth/account/urls.py #}
+                <a id="log-in-link" class="nav-link" href="{% url 'account_login' %}">{% translate "Sign In" %}</a>
+              </li>
+            {% endif %}{% endcomment %}
+          </ul>
+        </div>
+      </nav>
+
+    </div>
+    {% endif %}
+
+
+    <div class="container">
+
+      {% if messages %}
+          {% for message in messages %}
+              <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}<button type="button" class="flaot-end btn-close" data-bs-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>
+          {% endfor %}
+      {% endif %}
+
+      {% block content %}
+        <p>Use this document as a way to quick start any new project.</p>
+      {% endblock content %}
+
+    </div> <!-- /container -->
+
+    {% block modal %}{% endblock modal %}
+    {% block dataTableJS %}
+      <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
+  {% endblock %}
+    {% block inline_javascript %}
+    {# Script tags with only code, no src (defer by default) #}
+       <script>
+         // Example starter JavaScript for disabling form submissions if there are invalid fields
+          (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            let forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+              .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                  if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                  }
+
+                  form.classList.add('was-validated')
+                }, false)
+              })
+          })()
+      </script>
+      <script>
+            $(document).ready(function () {
+                $('table.display tfoot tr th').each( function () {
+
+                  let title = $(this).text();
+                  if (title !== "")
+                  {
+                    $(this).html( '<input type="text" class="search" placeholder="Recherche '+title+'" />' );
+                  }
+
+              } );
+
+                $('.recherche th').each( function () {
+
+                  let title = $(this).text();
+                  if (title !== "")
+                  {
+                    $(this).html( '<input type="text" class="search" placeholder="Recherche '+title+'" />' );
+                  }
+
+              } );
+                $('table.display').DataTable(
+                    {
+                      dom:'lBfrtip',
+                        buttons: [
+                          'excel', 'pdf', 'print'
+                      ],
+                      lengthMenu: [10,   50, 100],
+                         responsive : true,
+                        "language": {
+                            "sEmptyTable": "Aucune donnée disponible pour le moment",
+                            "sInfo": "Affichage de l'élément _START_ à _END_ sur _TOTAL_ éléments",
+                            "sInfoEmpty": "Affichage de l'élément 0 à 0 sur 0 élément",
+                            "sInfoFiltered": "(filtré à partir de _MAX_ éléments au total)",
+                            "sInfoPostFix": "",
+                            "sInfoThousands": ",",
+                            "sLengthMenu": "Afficher _MENU_ éléments",
+                            "sLoadingRecords": "Chargement...",
+                            "sProcessing": "Traitement...",
+                            "sSearch": "Rechercher :",
+                            "sZeroRecords": "Aucun élément correspondant trouvé",
+                            "oPaginate": {
+                                "sFirst": "Premier",
+                                "sLast": "Dernier",
+                                "sNext": "Suivant",
+                                "sPrevious": "Précédent"
+                            },
+                            "oAria": {
+                                "sSortAscending": ": activer pour trier la colonne par ordre croissant",
+                                "sSortDescending": ": activer pour trier la colonne par ordre décroissant"
+                            },
+                            "select": {
+                                "rows": {
+                                    "_": "%d lignes sélectionnées",
+                                    "0": "Aucune ligne sélectionnée",
+                                    "1": "1 ligne sélectionnée"
+                                }
+                            },
+                        },
+                      initComplete: function(){
+                              this.api().columns().every(
+                                      function () {
+                                        var that = this;
+                                        $('input.search', this.footer()).on('keyup change clear', function (){
+                                          if(that.search() !== this.value){
+                                            that.search(this.value).draw();
+                                          }
+                                        });
+                                      }
+                              )
+                          }
+                    }
+                )
+
+            });
+
+          //$('.card-header').addClass('bg-secondary text-white')
+          $('.card-header a.btn').addClass('btn-success shadow-0 text-white text-lowercase')
+          //$('div.form-group').addClass('form-outline')
+       {% comment %}   $(document).ready(function() {
+              $('form select').select2();
+          });{% endcomment %}
+          $('div.form-group').addClass('my-2');
+          $('.card-body').css('background-color','whitesmoke');
+          $('table').addClass("text-center")
+          $('thead').addClass('fw-bold')
+        </script>
+    {% endblock inline_javascript %}
+
+{% block addJs %}
+
+{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% block title %}
+Catalogue
+{% endblock %}
+{% block content %}
+  <div class="row pt-5">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <span>Catalogue des médicaments</span><span class="float-end"><a href="" class="btn btn-success me-2"><i class="fa fa-list"></i> Charger une liste</a><a href="#" class="btn btn-success mx-auto" data-bs-target="#create" data-bs-toggle="modal"><i class="fa fa-plus"></i> Ajouter un médicament</a></span>
+        </div>
+        <div class="card-body table-responsive">
+          <table class="table table-hover table-bordered table-condensed table-striped display">
+            <thead>
+              <tr>
+                <th>&numero;</th>
+                <th>Categorie</th>
+                <th>Nom du produit</th>
+                <th>Prix</th>
+                <td>Quantité</td>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for drug in drug_list %}
+                <tr>
+                  <td>{{ drug.pk }}</td>
+                  <td>{{ drug.category }}</td>
+                  <td>{{ drug.name }}</td>
+                  <td>{{ drug.price }}</td>
+                  <td>{{ drug.quantity }}</td>
+                  <td>
+{#                    <button type="button" data-bs-target="#{{ forloop.counter }}" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Apercu</button>#}
+                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#update{{ forloop.counter }}"><i class="fa fa-edit"></i> Modifier</button>
+                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#add{{ forloop.counter }}"><i class="fa fa-plus"></i> Ajouter</button>
+                  </td>
+                </tr>
+                <div class="modal fade" tabindex="-1" id="update{{ forloop.counter }}" aria-labelledby="detailModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Modifer un médicament</h5>
+                    <button type="button" class="btn-close btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{% url 'core:drug_update' drug.pk %}" method="post"  class="needs-validation"  novalidate enctype="multipart/form-data">
+                      {% csrf_token %}
+                      {{ drug_update_form | crispy }}
+                      <button class="btn btn-outline-info btn-block col-12" type="submit"> Enregistrer </button>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+                <div class="modal fade" tabindex="-1" id="add{{ forloop.counter }}" aria-labelledby="detailModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Ajouter un médicament</h5>
+                    <button type="button" class="btn-close btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form action="{% url 'core:drug_add' drug.pk %}" method="post"  class="needs-validation"  novalidate enctype="multipart/form-data">
+                      {% csrf_token %}
+                      {{ drug_add_form | crispy }}
+                      <button class="btn btn-outline-info btn-block col-12" type="submit"> Enregistrer </button>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+              {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal fade" tabindex="-1" id="create" aria-labelledby="detailModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Ajouter un médicament</h5>
+                    <button type="button" class="btn-close btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="post"  class="needs-validation"  novalidate enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="text-danger" id="adderror"></div>
+                      {{ form.media }}
+                      {{ form | crispy }}
+                      <button class="btn btn-outline-info btn-block col-12" id="medoc" type="submit"> Enregistrer </button>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block addJs %}
+  <script>
+    $('#id_name').keyup(function () {
+      console.log('click')
+      $.get(
+              {
+                url : "{% url 'core:check_name' %}",
+                data : {
+                  name: $('#id_name').val()
+                },
+                dataType: 'json',
+                success: function (data) {
+                  console.log("success")
+                  if (data.exist){
+                   $('#id_name').addClass('border-danger')
+                    $('#medoc').add('disabled')
+                    $('#adderror').removeClass('text-success').addClass('text-danger').text("Ce produit existe déjà !")
+                  }
+                  else {
+                    $('#id_name').addClass('border-success')
+                    $('#medoc').removeAttr('disabled')
+                    $('#adderror').removeClass('text-danger').addClass('text-success').text("Nouveau médicament !")
+                  }
+                }
+              }
+      )
+    })
+  </script>
+{% endblock %}

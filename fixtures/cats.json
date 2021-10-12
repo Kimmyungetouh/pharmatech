@@ -1,0 +1,24 @@
+
+[
+  {
+    "model": "core.Category",
+    "pk": 1,
+    "fields":{
+              "name": "Analgésiques et Anti-inflammatoires"
+            }
+  },
+  {
+    "model": "core.Category",
+    "pk": 2,
+    "fields":{
+              "name": "Antiviraux"
+            }
+  },
+   {
+    "model": "core.Category",
+    "pk": 3,
+    "fields":{
+              "name": "Dermatologie"
+            }
+  }
+]
