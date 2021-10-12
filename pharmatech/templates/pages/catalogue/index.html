@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load qr_code %}
+{% load djmoney %}
 {% load crispy_forms_filters %}
 {% block title %}
 Catalogue
@@ -28,14 +30,27 @@ Catalogue
                   <td>{{ drug.pk }}</td>
                   <td>{{ drug.category }}</td>
                   <td>{{ drug.name }}</td>
-                  <td>{{ drug.price }}</td>
+                  <td>{% money_localize drug.price 'XOF' %}</td>
                   <td>{{ drug.quantity }}</td>
                   <td>
-{#                    <button type="button" data-bs-target="#{{ forloop.counter }}" class="btn btn-sm btn-info"><i class="fa fa-eye"></i> Apercu</button>#}
-                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#update{{ forloop.counter }}"><i class="fa fa-edit"></i> Modifier</button>
-                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#add{{ forloop.counter }}"><i class="fa fa-plus"></i> Ajouter</button>
+                    <button type="button" data-bs-toggle="modal" data-bs-target="#qr{{ forloop.counter }}" class="btn btn-sm btn-outline-info"><i class="fa fa-eye"></i> Code QR</button>
+                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#update{{ forloop.counter }}"><i class="fa fa-edit"></i> Modifier</button>
+                    <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#add{{ forloop.counter }}"><i class="fa fa-plus"></i> Ajouter</button>
                   </td>
                 </tr>
+                <div class="modal fade" tabindex="-1" id="qr{{ forloop.counter }}" aria-labelledby="dqrModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">CODE QR DU PRODUIT</h5>
+                    <button type="button" class="btn-close btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body text-center">
+                    {% qr_from_text drug.qr_code size="M" %}
+                  </div>
+                </div>
+              </div>
+            </div>
                 <div class="modal fade" tabindex="-1" id="update{{ forloop.counter }}" aria-labelledby="detailModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">

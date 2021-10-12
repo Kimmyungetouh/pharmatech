@@ -75,6 +75,8 @@ THIRD_PARTY_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "django_addanother",
+    "djmoney",
+    "qr_code"
 ]
 
 LOCAL_APPS = [

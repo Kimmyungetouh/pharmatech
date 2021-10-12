@@ -20,7 +20,7 @@ class Drug(models.Model):
         return "%s - %s -" % (self.name, self.category)
 
     @property
-    def alerte(self):
-        if self.quantity < 5:
-            return "Alerte rupture"
-        return self.quantity
+    def qr_code(self):
+        return "%s -- %s -- %s XOF -- %s restant(s)" % (self.name, self.category.name, self.price, self.quantity)
+
+
