@@ -17,6 +17,9 @@ Mettre à jour catégorie
            {% csrf_token %}
            {{ form | crispy}}
             {{ form.media }}
+           <div>
+              <button class="btn btn-success  col-12 float-end mt-3" type="submit"><i class="fa fa-save"></i> Enregistrer</button>
+           </div>
          </form>
        </div>
      </div>
