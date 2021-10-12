@@ -76,7 +76,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "django_addanother",
     "djmoney",
-    "qr_code"
+    "qr_code",
 ]
 
 LOCAL_APPS = [

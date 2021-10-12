@@ -22,3 +22,4 @@ django-select2
 whitenoise
 django-money
 django-qr-code
+django-decorator-include

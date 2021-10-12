@@ -7,14 +7,17 @@
 {% block head_title %}{% translate "Sign In" %}{% endblock %}
 
 {% block inner %}
-
-<h1>{% translate "Sign In" %}</h1>
+<div class="card">
+  <div class="card-header bg-success text-white">
+    <h1>{% translate "Sign In" %}</h1>
+  </div>
+<div class="card-body">
 
 {% get_providers as socialaccount_providers %}
 
 {% if socialaccount_providers %}
 <p>{% blocktranslate with site.name as site_name %}Please sign in with one
-of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+of your existing third party accounts. Or, <a class="nav-link" href="{{ signup_url }}">sign up</a>
 for a {{ site_name }} account and sign in below:{% endblocktranslate %}</p>
 
 <div class="socialaccount_ballot">
@@ -40,8 +43,12 @@ for a {{ site_name }} account and sign in below:{% endblocktranslate %}</p>
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% translate "Forgot Password?" %}</a>
-  <button class="primaryAction btn btn-primary" type="submit">{% translate "Sign In" %}</button>
+  <a class="button secondaryAction nav-link" href="{% url 'account_reset_password' %}">{% translate "Forgot Password?" %}</a>
+  <button class="primaryAction btn btn-info col-12" type="submit">{% translate "Sign In" %}</button>
 </form>
+</div>
+</div>
+
+
 
 {% endblock %}
