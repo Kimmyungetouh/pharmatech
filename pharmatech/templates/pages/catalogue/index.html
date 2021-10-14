@@ -10,14 +10,14 @@ Catalogue
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
-          <span>Catalogue des médicaments</span><span class="float-end"><a href="" class="btn btn-success me-2"><i class="fa fa-list"></i> Charger une liste</a><a href="#" class="btn btn-success mx-auto" data-bs-target="#create" data-bs-toggle="modal"><i class="fa fa-plus"></i> Ajouter un médicament</a></span>
+          <span>Catalogue des médicaments</span><span class="float-end"><a href="" data-bs-toggle="modal" data-bs-target="#list_upload" class="btn btn-success me-2"><i class="fa fa-list"></i> Charger une liste</a><a href="#" class="btn btn-success mx-auto" data-bs-target="#create" data-bs-toggle="modal"><i class="fa fa-plus"></i> Ajouter un médicament</a></span>
         </div>
         <div class="card-body table-responsive">
           <table class="table table-hover table-bordered table-condensed table-striped display">
             <thead>
               <tr>
                 <th>&numero;</th>
-                <th>Categorie</th>
+                <th>Catégorie</th>
                 <th>Nom du produit</th>
                 <th>Prix</th>
                 <td>Quantité</td>
@@ -116,6 +116,32 @@ Catalogue
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+      <div class="modal fade" tabindex="-1" id="list_upload" aria-labelledby="detailModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Ajouter une liste de médicaments </h5>
+                    <button type="button" class="btn-close btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <form method="post"  action="{% url 'core:list_drug_upload' %}" class="needs-validation"  novalidate enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="form-row">
+                       <div class="input-group mb-3">
+                          <label class="input-group-text" for="list_upload">Liste </label>
+                          <input type="file" name="drug_list" class="form-control" id="list_upload" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                        </div>
+                      </div>
+                      <button class="btn btn-outline-info btn-block col-12" type="submit"> Charger </button>
+                    </form>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-danger col-12" data-bs-dismiss="modal">Annuler</button>
                   </div>
                 </div>
               </div>

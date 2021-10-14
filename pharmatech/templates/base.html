@@ -80,9 +80,9 @@
                 {# URL provided by django-allauth/account/urls.py #}
                 <a class="nav-link" href="{% url 'users:detail' request.user.username  %}">{% translate "My Profile" %}</a>
               </li>{% endcomment %}
-              <li class="nav-item">
+              <li class="nav-item float-end">
                 {# URL provided by django-allauth/account/urls.py #}
-                <a class="nav-link" href="{% url 'account_logout' %}">{% translate "Sign Out" %}</a>
+                <a class="nav-link" href="{% url 'account_logout' %}"><i class="fa fa-sign-out"></i>{% translate "Sign Out" %}</a>
               </li>
             {% else %}
             {% comment %}  <li class="nav-item">

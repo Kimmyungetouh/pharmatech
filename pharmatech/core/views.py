@@ -1,8 +1,10 @@
 from django.contrib import messages
-from django.db.models import Count
+import xlrd
+from tablib import Dataset
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.views import View
 from django.views.generic import ListView, CreateView, DetailView, UpdateView
 # Create your views here.
 from django_addanother.views import CreatePopupMixin, UpdatePopupMixin
@@ -26,7 +28,7 @@ class CatalogueView(ListView):
     def post(self, request):
         form = DrugForm(request.POST)
         if form.is_valid():
-            if  Drug.objects.filter(name__iexact=form.instance.name).exists():
+            if Drug.objects.filter(name__iexact=form.instance.name).exists():
                 drug = Drug.objects.filter(name__iexact=form.instance.name)
                 print(drug.quantity)
                 drug.quantity += form.instance.quantity
@@ -138,3 +140,37 @@ class VenteView(ListView):
         context['drug_add_form'] = AddDrugForm
         return context
 
+
+class UploadDrugListView(View):
+
+    def post(self, request, **kwargs):
+        fic = request.FILES['drug_list']
+        try:
+            drugs = Dataset().load(fic, headers=['№', 'Catégorie', 'Nom du produit', 'Prix', 'Quantité', 'Actions'])
+            for drug in drugs.dict:
+                if Drug.objects.filter(name__iexact=drug.get('Nom du produit').strip()).exists():
+                    pass
+                else:
+                    if not Category.objects.filter(name__iexact=drug.get('Catégorie')).exists():
+                        cat = Category.objects.create(name=drug.get('Catégorie'))
+                        Drug.objects.create(name=drug.get('Nom du produit').strip(),
+                                            category_id=cat.id,
+                                            price=drug.get('Prix').strip(),
+                                            quantity=drug.get('Quantité').strip()
+                                            )
+                    else:
+                        cat = Category.objects.get(name=drug.get('Catégorie'))
+                        Drug.objects.create(name=drug.get('Nom du produit').strip(),
+                                            category_id=cat.id,
+                                            price=drug.get('Prix').strip(),
+                                            quantity=drug.get('Quantité').strip()
+                                            )
+            messages.success(request, "Liste des produits chargée avec succès !")
+            return redirect(reverse('core:catalogue'))
+
+        except Exception as e:
+            print(e)
+            messages.error(request,
+                           "Échec dans le chargement de la list de produit ! Si le problème persiste, veuillez "
+                           "procéder manuellement")
+            return redirect(reverse('core:catalogue'))
